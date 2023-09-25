@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
         textToSpeech = TextToSpeech(this, this)
 
-        binding.btnSpeak.setOnClickListener { speakOut() }
+        binding.imgSpeak.setOnClickListener { speakOut() }
 
         setScore()
         binding.btnPlusA.setOnClickListener { view ->
@@ -44,7 +44,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             setScore()
         }
         binding.btnMinA.setOnClickListener { view ->
-            if (scoreA != 0) scoreA -= 1
+            if (scoreA != 0) {
+                scoreA -= 1
+//                isAddedA = false
+            }
             setScore()
         }
         binding.btnPlusB.setOnClickListener { view ->
@@ -56,7 +59,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             setScore()
         }
         binding.btnMinB.setOnClickListener { view ->
-            if (scoreB != 0) scoreB -= 1
+            if (scoreB != 0) {
+                scoreB -= 1
+//                isAddedA = true
+            }
             setScore()
         }
 
@@ -70,9 +76,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun speakOut() {
-        val scoreText =
+        var scoreText =
             if (isAddedA) "${getNumberText(scoreA)} ${getNumberText(scoreB)}"
             else "${getNumberText(scoreB)} ${getNumberText(scoreA)}"
+
+        if (scoreA == 0 && scoreB == 0) {
+            scoreText = "kosong kosong, ayo main!"
+        }
 
         textToSpeech!!.speak(
             scoreText,
@@ -178,7 +188,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Log.e("TTS", "The Language not supported!")
             } else {
-                binding.btnSpeak!!.isEnabled = true
+                binding.imgSpeak.isEnabled = true
             }
         }
     }
