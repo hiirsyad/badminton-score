@@ -2,21 +2,24 @@ package com.lazday.badmintonscore
 
 import android.os.Bundle
 import android.os.Vibrator
+import android.speech.tts.TextToSpeech
 import android.util.Log
-import android.view.HapticFeedbackConstants
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import com.lazday.badmintonscore.databinding.ActivityMainBinding
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     private lateinit var vibrator: Vibrator
+    private var textToSpeech: TextToSpeech? = null
 
     private var scoreA: Int = 0
     private var scoreB: Int = 0
+    private var isAddedA: Boolean = false
     private var isPlaying: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,12 +30,16 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+        textToSpeech = TextToSpeech(this, this)
+
+        binding.btnSpeak.setOnClickListener { speakOut() }
 
         setScore()
         binding.btnPlusA.setOnClickListener { view ->
             if (scoreA < maxScore()) {
                 scoreA += 1
                 isPlaying = true
+                isAddedA = true
             }
             setScore()
         }
@@ -44,6 +51,7 @@ class MainActivity : AppCompatActivity() {
             if (scoreB < maxScore()) {
                 scoreB += 1
                 isPlaying = true
+                isAddedA = false
             }
             setScore()
         }
@@ -59,6 +67,19 @@ class MainActivity : AppCompatActivity() {
             buttonEnable(isEnable = true)
             setScore()
         }
+    }
+
+    private fun speakOut() {
+        val scoreText =
+            if (isAddedA) "${getNumberText(scoreA)} ${getNumberText(scoreB)}"
+            else "${getNumberText(scoreB)} ${getNumberText(scoreA)}"
+
+        textToSpeech!!.speak(
+            scoreText,
+            TextToSpeech.QUEUE_FLUSH,
+            null,
+            ""
+        )
     }
 
     private fun setScore(){
@@ -148,5 +169,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun vibrate() {
         vibrator.vibrate(111)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = textToSpeech!!.setLanguage(Locale.US)
+
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "The Language not supported!")
+            } else {
+                binding.btnSpeak!!.isEnabled = true
+            }
+        }
+    }
+
+    public override fun onDestroy() {
+        // Shutdown TTS when
+        // activity is destroyed
+        if (textToSpeech != null) {
+            textToSpeech!!.stop()
+            textToSpeech!!.shutdown()
+        }
+        super.onDestroy()
     }
 }

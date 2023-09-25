@@ -1,0 +1,38 @@
+package com.lazday.badmintonscore
+
+fun getNumberText(number: Int): String {
+    return when (number) {
+        0 -> "kosong"
+        1 -> "satu"
+        2 -> "dua"
+        3 -> "tiga"
+        4 -> "empat"
+        5 -> "lima"
+        6 -> "enam"
+        7 -> "tujuh"
+        8 -> "delapan"
+        9 -> "sembilan"
+        10 -> "sepuluh"
+        11 -> "sebelas"
+        12 -> "dua belas"
+        13 -> "tiga belas"
+        14 -> "empat belas"
+        15 -> "lima belas"
+        16 -> "enam belas"
+        17 -> "tujuh belas"
+        18 -> "delapan belas"
+        19 -> "sembilan belas"
+        20 -> "dua puluh"
+        21 -> "dua puluh satu"
+        22 -> "dua puluh dua"
+        23 -> "dua puluh tiga"
+        24 -> "dua puluh empat"
+        25 -> "dua puluh lima"
+        26 -> "dua puluh enam"
+        27 -> "dua puluh tujuh"
+        28 -> "dua puluh delapan"
+        29 -> "dua puluh sembilan"
+        30 -> "tiga puluh"
+        else -> ""
+    }
+}
