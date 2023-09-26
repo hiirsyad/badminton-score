@@ -101,6 +101,8 @@
         tools:ignore="HardcodedText" />
 
     <ImageView
+        tools:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/img_speak"
         android:layout_width="125dp"
         android:layout_height="125dp"
