@@ -143,8 +143,15 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             )
         }
 
-        binding.textReset.visibility =
-            if (scoreA == 0 && scoreB == 0) View.GONE else View.VISIBLE
+        if (isPlaying) {
+            binding.imgShuttlecockA.visibility = if (isAddedA) View.VISIBLE else View.GONE
+            binding.imgShuttlecockB.visibility = if (isAddedA) View.GONE else View.VISIBLE
+        } else {
+            listOf<View>( binding.imgShuttlecockA, binding.imgShuttlecockB )
+                .forEach { it.visibility = View.GONE }
+        }
+
+        binding.textReset.visibility = if (isPlaying) View.VISIBLE else View.GONE
 
         if (scoreA == 0 && scoreB == 0) {
             isPlaying = false
